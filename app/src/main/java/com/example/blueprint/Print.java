@@ -9,6 +9,8 @@ import android.graphics.Paint;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 
 public class Print extends View {
@@ -20,6 +22,7 @@ public class Print extends View {
     private Paint wallPaint;
     private int BackgroundColor=0XFF015B8F;
     private int StrokeColor=0XFFC6DBE8;
+    private Random random;
 
     public Print(Context context,@Nullable AttributeSet attrs){
         super(context,attrs);
@@ -27,7 +30,7 @@ public class Print extends View {
         wallPaint=new Paint();
         wallPaint.setColor(StrokeColor);
         wallPaint.setStrokeWidth(WALLTHICKNESS);
-
+        random= new Random();
         createMaze();
     }
 
@@ -67,6 +70,66 @@ public class Print extends View {
 
     }
 
+    private Cell getNeighbour(Cell cell){
+        ArrayList<Cell> neighbours=new ArrayList<>();
+
+//        left Neighbour
+        if(cell.col>0)
+        if(!cells[cell.row][cell.col -1 ].visited){
+            neighbours.add(cells[cell.row][cell.col-1]);
+        }
+
+        if(cell.col< COLS-1)
+//        Right neighbour
+        if(!cells[cell.row][cell.col+1 ].visited){
+            neighbours.add(cells[cell.row][cell.col+1]);
+        }
+
+//        Top neighbour
+        if(cell.row > 0)
+        if(!cells[cell.row-1][cell.col].visited){
+            neighbours.add(cells[cell.row-1][cell.col]);
+        }
+
+//        bottom neighbour
+        if(cell.row < ROWS-1)
+        if(!cells[cell.row+1][cell.col].visited){
+            neighbours.add(cells[cell.row+1][cell.col]);
+        }
+
+        if(neighbours.size() > 0){
+            int index=random.nextInt(neighbours.size());
+            return neighbours.get(index);
+        }
+        return null;
+    }
+
+    private void removeWall(Cell current,Cell next){
+//        current is below next
+        if(current.col==next.col && current.row==next.row+1){
+            next.bottomWall=false;
+            current.topWall=false;
+        }
+
+//        current is above next
+        if(current.col==next.col && current.row + 1==next.row){
+            next.topWall=false;
+            current.bottomWall=false;
+        }
+
+//        current is left of next
+        if(current.col + 1==next.col && current.row==next.row){
+            next.leftWall=false;
+            current.rightWall=false;
+        }
+
+        //current is right of next
+        if(current.col==next.col + 1 && current.row==next.row){
+            next.rightWall=false;
+            current.leftWall=false;
+        }
+    }
+
     private void createMaze(){
         cells=new Cell[ROWS][COLS];
 
@@ -80,13 +143,14 @@ public class Print extends View {
 
         current  =  cells[0][0];
         current.visited = true;
-       do{
+
+        do{
            next = getNeighbour(current);
            if(next != null){
                removeWall(current,next);
                st.push(current);
                current = next;
-               current.visited = true
+               current.visited = true;
            }else{
                current = st.pop();
            }
@@ -95,7 +159,7 @@ public class Print extends View {
     }
 
     private class Cell{
-       boolean topWall=true,bottomWall=true,leftWall=true,rightWall=true;
+       boolean topWall=true,bottomWall=true,leftWall=true,rightWall=true,visited=false;
        int col,row;
        public Cell(int col,int row){
            this.col=col;
