@@ -21,12 +21,13 @@ public class Print extends View {
 
     private Cell[][] cells;
     private  static final int COLS=642,ROWS=258;
-    private static final float WALLTHICKNESS=1;
+    private static final float WALLTHICKNESS=8;
     private float cellheight,cellwidth,hmargin,vmargin;
     private Paint wallPaint;
     private TextPaint textPaint;
-    private int BackgroundColor=0XFF015B8F;
-    private int StrokeColor=0XFFC6DBE8;
+    private int BackgroundColor=0XFFFDFDFD;
+    private int StrokeColor=0XFFE1DEDE;
+    private int roomColor=0XFFEBEBEB;
     private Random random;
     private ArrayList<ArrayList<Integer>> allRooms=new ArrayList<ArrayList<Integer>>();
     private ArrayList<String> roomNames=new ArrayList<String>();
@@ -55,6 +56,7 @@ public class Print extends View {
         vmargin =50;
 
         canvas.translate(hmargin,vmargin);
+//        canvas.drawRect();
         for(int i=0;i<ROWS;i++){
             for(int j=0;j<COLS;j++){
                 if(cells[i][j].topWall){
@@ -75,13 +77,24 @@ public class Print extends View {
 //        for(int j=0;j<allRooms.size();j++){
 //            allRooms.get(j).draw(canvas);
 //        }
-        wallPaint.setTextSize(28);
-        wallPaint.setTextAlign(Paint.Align.CENTER);
         for(int j=0;j<allRooms.size();j++){
+            Paint rectPaint=new Paint();
+            rectPaint.setStyle(Paint.Style.FILL);
+            rectPaint.setColor(roomColor);
             ArrayList<Integer> curRoom=allRooms.get(j);
+            canvas.drawRect(curRoom.get(2)*cellwidth, curRoom.get(0)*cellheight, curRoom.get(3)*cellwidth, (curRoom.get(1)+1)*cellheight, rectPaint);
+
+            rectPaint.setStyle(Paint.Style.STROKE);
+            rectPaint.setColor(StrokeColor);
+            rectPaint.setStrokeWidth(WALLTHICKNESS);
+            canvas.drawRect(curRoom.get(2)*cellwidth, curRoom.get(0)*cellheight, curRoom.get(3)*cellwidth, (curRoom.get(1)+1)*cellheight, rectPaint);
             int xStart=(int)(((curRoom.get(2)+curRoom.get(3))/2)*cellwidth);
             int yStart=(int)(((curRoom.get(0)+curRoom.get(1))/2)*cellheight);
-            canvas.drawText(roomNames.get(j),xStart,yStart,wallPaint);
+            rectPaint.setColor(Color.GRAY);
+            rectPaint.setTextSize(30);
+            rectPaint.setTextAlign(Paint.Align.CENTER);
+            rectPaint.setStyle(Paint.Style.FILL);
+            canvas.drawText(roomNames.get(j),xStart,yStart,rectPaint);
         }
     }
 
@@ -151,22 +164,9 @@ public class Print extends View {
 
                 if(j==colStart){
                     cells[i][j].leftWall=true;
-                    if(door_present==7){
-                        if(j<10){
-                            cells[i][j].leftWall=false;
-                        }
-                    }
-                    if(door_present==8){
-                        if(j>colEnd-10){
-                            cells[i][j].leftWall=false;
-                        }
-                    }
                 }
                 if(j==colEnd){
                     cells[i][j].rightWall=true;
-                }else{
-                    Log.i("hi",i+"" + j);
-                    cells[i][j].rightWall=false;
                 }
 //  Top boundary
                 if(i==rowStart){
