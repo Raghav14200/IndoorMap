@@ -1,8 +1,11 @@
 package com.example.blueprint;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +24,12 @@ public class Print extends View {
     private static final float WALLTHICKNESS=1;
     private float cellheight,cellwidth,hmargin,vmargin;
     private Paint wallPaint;
+    private TextPaint textPaint;
     private int BackgroundColor=0XFF015B8F;
     private int StrokeColor=0XFFC6DBE8;
     private Random random;
+    private ArrayList<ArrayList<Integer>> allRooms=new ArrayList<ArrayList<Integer>>();
+    private ArrayList<String> roomNames=new ArrayList<String>();
 
     public Print(Context context,@Nullable AttributeSet attrs){
         super(context,attrs);
@@ -44,9 +50,6 @@ public class Print extends View {
 
         cellwidth= (float) (width-100)/(COLS);
         cellheight = (float) (height-100)/(ROWS);
-////        Log.d(" rhg",cellheight+" " + cellwidth);
-//        Log.i("height,Width" ,cellwidth*COLS +  " " +  cellheight*ROWS + " " +  height + " " +  width);
-//        Log.i("Row,Cols" , ROWS +" " + COLS);
 
         hmargin =50;
         vmargin =50;
@@ -69,7 +72,17 @@ public class Print extends View {
             }
         }
 
-
+//        for(int j=0;j<allRooms.size();j++){
+//            allRooms.get(j).draw(canvas);
+//        }
+        wallPaint.setTextSize(28);
+        wallPaint.setTextAlign(Paint.Align.CENTER);
+        for(int j=0;j<allRooms.size();j++){
+            ArrayList<Integer> curRoom=allRooms.get(j);
+            int xStart=(int)(((curRoom.get(2)+curRoom.get(3))/2)*cellwidth);
+            int yStart=(int)(((curRoom.get(0)+curRoom.get(1))/2)*cellheight);
+            canvas.drawText(roomNames.get(j),xStart,yStart,wallPaint);
+        }
     }
 
 //    private Cell getNeighbour(Cell cell){
@@ -166,8 +179,26 @@ public class Print extends View {
         }
     }
 
-    public  void Rooms(int rowStart,int rowEnd,int colStart,int colEnd,int door_present){
+    public void drawAllRooms(){
+        Rooms(0,83,152,419,7,"Intel COE");
+        Rooms(0,83,0,151,1,"ISE Lab 1");
+        Rooms(98,139,0,151,1,"ISE Lab 2");
+        Rooms(168,257,0,151,1,"Apex block AI Lab");
+        Rooms(112,167,228,419,1,"");
+        Rooms(0,83,496,641,1,"Java Lab");
+        Rooms(112,195,496,641,1,"R and D lab");
+        Rooms(213,257,228,419,1,"CS Lab 1");
+    }
+
+    public  void Rooms(int rowStart,int rowEnd,int colStart,int colEnd,int door_present,String text){
         createRooms(rowStart,rowEnd,colStart,colEnd,door_present);
+        ArrayList<Integer> tempRoom=new ArrayList<Integer>();
+        tempRoom.add(rowStart);
+        tempRoom.add(rowEnd);
+        tempRoom.add(colStart);
+        tempRoom.add(colEnd);
+        allRooms.add(tempRoom);
+        roomNames.add(text);
     }
 
     private void removeWall(Cell current,Cell next){
@@ -206,36 +237,7 @@ public class Print extends View {
             }
         }
 
-        Rooms(0,83,152,419,7);
-        Rooms(0,83,0,151,1);
-        Rooms(98,139,0,151,1);
-        Rooms(168,257,0,151,1);
-        Rooms(112,167,228,419,1);
-        Rooms(0,83,496,641,1);
-        Rooms(112,195,496,641,1);
-        Rooms(213,257,228,419,1);
-
-//
-//
-//        Rooms(0,84-10,153,420);
-
-//        Stack<Cell> st = new Stack<>();
-//        Cell current,next;
-//
-//        current  =  cells[0][0];
-//        current.visited = true;
-//
-//        do{
-//           next = getNeighbour(current);
-//           if(next != null){
-//               removeWall(current,next);
-//               st.push(current);
-//               current = next;
-//               current.visited = true;
-//           }else{
-//               current = st.pop();
-//           }
-//       }while(!st.isEmpty());
+        drawAllRooms();
 
     }
 
