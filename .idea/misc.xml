@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/drawable/ic_baseline_add.xml" value="0.2135" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.2135" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/layout/appbar.xml" value="0.264" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/BluePrint/app/src/main/res/menu/menu.xml" value="0.1" />
       </map>
     </option>
   </component>
